@@ -1,1 +1,4 @@
-console.log('Executed');
+import dotenv from "dotenv"
+dotenv.config()
+
+// Cluster -> Database -> Collection -> Document
