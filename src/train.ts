@@ -1,3 +1,5 @@
+// MITASK-O
+
 // MITASK-N
 const palindrome = (str: string): any => {
   let reversed: string = str.split("").reverse().join("");
