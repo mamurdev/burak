@@ -1,5 +1,3 @@
-import { number } from "@elevenlabs/elevenlabs-js/core/schemas";
-
 // MITASK-O
 function calculateSumOfNumbers(arr: any[]): number {
   let sum: number = 0;
