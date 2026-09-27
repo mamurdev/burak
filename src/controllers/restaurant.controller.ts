@@ -1,0 +1,53 @@
+import { Request, Response } from "express";
+import { T } from "../libs/types/common";
+
+const restaurantController: T = {};
+restaurantController.goHome = (req: Request, res: Response) => {
+  try {
+    console.log("goHome");
+    res.send("Admin Home Page");
+    // res types: send | json | redirect | end | render
+  } catch (err) {
+    console.log("Error, goHome:", err);
+  }
+};
+
+restaurantController.getLogin = (req: Request, res: Response) => {
+  try {
+    console.log("getLogin");
+    res.send("Admin Login Page");
+  } catch (err) {
+    console.log("Error, getLogin:", err);
+  }
+};
+
+restaurantController.getSignup = (req: Request, res: Response) => {
+  try {
+    console.log("getSignup");
+    res.send("Admin Signup Page");
+  } catch (err) {
+    console.log("Error, getSignup:", err);
+  }
+};
+
+// -------------------------------------------
+
+restaurantController.processLogin = (req: Request, res: Response) => {
+  try {
+    console.log("processLogin");
+    res.send("processLogin Page");
+  } catch (err) {
+    console.log("Error, getSignup:", err);
+  }
+};
+
+restaurantController.processSignup = (req: Request, res: Response) => {
+  try {
+    console.log("processSignup");
+    res.send("processSignup Page");
+  } catch (err) {
+    console.log("Error, processSignup:", err);
+  }
+};
+
+export default restaurantController;
