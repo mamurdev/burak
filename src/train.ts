@@ -3,6 +3,13 @@ interface NumberObject {
   [key: string]: number;
 }
 
+function objectToArray(obj: NumberObject): [string, number][] {
+  let result: [] = Object.keys(obj)
+  let loop = result.map((key: string) => {
+    return result;
+  }) 
+}
+console.log(objectToArray({a: 10, b: 20}));
 
 
 
