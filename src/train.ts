@@ -4,12 +4,13 @@ interface NumberObject {
 }
 
 function objectToArray(obj: NumberObject): [string, number][] {
-  let result: [] = Object.keys(obj)
-  let loop = result.map((key: string) => {
-    return result;
+  let keys: string[]  = Object.keys(obj)
+  let key: [string, number][] = keys.map((key: string) => {
+    return [key, obj[key]];
   }) 
+  return key;
 }
-console.log(objectToArray({a: 10, b: 20}));
+// console.log(objectToArray({a: 10, b: 20}));
 
 
 
