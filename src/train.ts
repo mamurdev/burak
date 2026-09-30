@@ -1,3 +1,11 @@
+// MITASK-P
+interface NumberObject {
+  [key: string]: number;
+}
+
+
+
+
 // MITASK-O
 function calculateSumOfNumbers(arr: any[]): number {
   let sum: number = 0;
@@ -10,7 +18,7 @@ function calculateSumOfNumbers(arr: any[]): number {
   return sum;
 }
 
-console.log(calculateSumOfNumbers(["20", 20, {son: 20}, true, 42]));
+// console.log(calculateSumOfNumbers(["20", 20, {son: 20}, true, 42]));
 
 
 // MITASK-N
