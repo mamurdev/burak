@@ -1,3 +1,14 @@
+// MITASK-Q
+interface hasPropertyInt {
+  [key: string]: any;
+}
+function hasProperty(obj: hasPropertyInt, propName: string): boolean {
+  if(propName in obj) {
+    return true;
+  } else return false;
+}
+console.log(hasProperty({age: 25}, "age"));
+
 // MITASK-P
 interface NumberObject {
   [key: string]: number;

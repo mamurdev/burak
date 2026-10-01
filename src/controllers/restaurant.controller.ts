@@ -45,7 +45,6 @@ restaurantController.processLogin = async (req: Request, res: Response) => {
     res.send(result);
   } catch (err) {
     console.log("Error, processLogin:", err);
-    res.send(err)
   }
 };
 
