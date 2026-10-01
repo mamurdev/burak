@@ -1,3 +1,5 @@
+import { messages } from "@elevenlabs/elevenlabs-js/api/resources/conversationalAi/resources/conversations";
+
 export enum HttpCode {
   OK = 200,
   CREATED = 201,
@@ -16,12 +18,17 @@ export enum Message {
   UPDATE_FAILED = "Update is failed!",
   USED_NICK_PHONE = "Already used nickname or phone is being inserted!",
   NO_MEMBER_NICK = "No such member exists!",
-  WRONG_PASSWORD = "Wrong Password. Try again!"
+  WRONG_PASSWORD = "Wrong Password. Try again!",
 }
 
 class Errors extends Error {
   public code: HttpCode;
   public message: Message;
+
+  static standard = {
+    code: HttpCode.INTERNAL_SERVER_ERROR,
+    message: Message.SOMETHING_WENT_WRONG,
+  };
 
   constructor(statusCode: HttpCode, statusMessage: Message) {
     super();
