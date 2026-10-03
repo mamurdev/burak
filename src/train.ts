@@ -1,13 +1,32 @@
+// MITASK-R
+function calculate(str: string): number {
+  let parts: string[] = str.split(" "),
+    num1 = Number(parts[0]),
+    operator = parts[1],
+    num2 = Number(parts[2]);
+  switch (operator) {
+    case "+":
+      return num1 + num2;
+    case "-":
+      return num1 - num2;
+    case "*":
+      return num1 * num2;
+    default:
+      return num1 / num2;
+  }
+}
+console.log(calculate("3 / 3"));
+
 // MITASK-Q
 interface hasPropertyInt {
   [key: string]: any;
 }
 function hasProperty(obj: hasPropertyInt, propName: string): boolean {
-  if(propName in obj) {
+  if (propName in obj) {
     return true;
   } else return false;
 }
-console.log(hasProperty({age: 25}, "age"));
+// console.log(hasProperty({age: 25}, "age"));
 
 // MITASK-P
 interface NumberObject {
@@ -15,21 +34,19 @@ interface NumberObject {
 }
 
 function objectToArray(obj: NumberObject): [string, number][] {
-  let keys: string[]  = Object.keys(obj)
+  let keys: string[] = Object.keys(obj);
   let key: [string, number][] = keys.map((key: string) => {
     return [key, obj[key]];
-  }) 
+  });
   return key;
 }
 // console.log(objectToArray({a: 10, b: 20}));
 
-
-
 // MITASK-O
 function calculateSumOfNumbers(arr: any[]): number {
   let sum: number = 0;
-  for(let i = 0; i < arr.length; i++) {
-    if(typeof arr[i] === "number") {
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === "number") {
       sum += arr[i];
     }
   }
@@ -38,7 +55,6 @@ function calculateSumOfNumbers(arr: any[]): number {
 }
 
 // console.log(calculateSumOfNumbers(["20", 20, {son: 20}, true, 42]));
-
 
 // MITASK-N
 const palindrome = (str: string): any => {
