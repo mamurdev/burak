@@ -1,3 +1,18 @@
+// MITASK-S
+function missingNumber(arr: number[]): number {
+  const n: number = arr.length;
+  const expectedSum: number = (n * (n + 1)) / 2;
+
+  let actualSum: number = 0;
+  for (let i = 0; i < arr.length; i++) {
+    actualSum += arr[i];
+  }
+
+  return expectedSum - actualSum;
+}
+
+console.log(missingNumber([3, 0, 1])); // 2
+
 // MITASK-R
 function calculate(str: string): number {
   let parts: string[] = str.split(" "),
