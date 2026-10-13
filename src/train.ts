@@ -1,3 +1,9 @@
+// MITASK-T
+function mergeSortedArrays(a: number[], b: number[]): number[] {
+  return [...a, ...b].sort((x, y) => x- y);
+}
+console.log(mergeSortedArrays([4, 2, 10], [9, 7, 5]));
+
 // MITASK-S
 function missingNumber(arr: number[]): number {
   const n: number = arr.length;
@@ -11,7 +17,7 @@ function missingNumber(arr: number[]): number {
   return expectedSum - actualSum;
 }
 
-console.log(missingNumber([3, 0, 1])); // 2
+// console.log(missingNumber([3, 0, 1]));
 
 // MITASK-R
 function calculate(str: string): number {
@@ -30,7 +36,7 @@ function calculate(str: string): number {
       return num1 / num2;
   }
 }
-console.log(calculate("3 / 3"));
+// console.log(calculate("3 / 3"));
 
 // MITASK-Q
 interface hasPropertyInt {
