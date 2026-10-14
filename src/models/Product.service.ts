@@ -14,6 +14,13 @@ class ProductService {
     this.productModel = ProductModel;
   }
 
+  public async getAllProducts(): Promise<Product[]> {
+    const result = await this.productModel.find().exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    return result;
+  }
+
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
       return await this.productModel.create(input);
@@ -22,6 +29,7 @@ class ProductService {
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }
+
   public async updateChosenProduct(
     id: string,
     input: ProductUpdateInput,
@@ -32,8 +40,8 @@ class ProductService {
       input,
       { new: true },
     );
-    if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
-  return result
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    return result;
   }
 }
 

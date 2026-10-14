@@ -1,9 +1,11 @@
-<%- include('includes/header.ejs')%>
+<%- include('includes/header.ejs') %>
 <body>
   <div>
     <div>Products Page</div>
-    <div><%=member.memberNick%></div>
+    <div><%= member.memberNick %></div>
+    <% products.map((value, key) => { %>
+    <p><%= value.productName %> - <%= value.productSize %></p>
+    <% }) %>
   </div>
-
 </body>
 <%- include('includes/footer.ejs') %>

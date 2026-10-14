@@ -11,8 +11,9 @@ const productController: T = {};
 productController.getAllProduct = async (req: Request, res: Response) => {
   try {
     console.log("getAllProduct");
+    const data = await productService.getAllProducts();
 
-    res.render("products");
+    res.render("products", {products: data});
   } catch (err) {
     console.log("Error, signup:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
