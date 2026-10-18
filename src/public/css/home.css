@@ -1,67 +1,219 @@
+/* ==========================================================================
+   BURAK HOME / COMMAND CENTER (LUMINOUS MEDITERRANEAN HOSPITALITY)
+   ========================================================================== */
+
 .home-container {
-  position: relative;
-  width: auto;
-  height: auto;
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: linear-gradient(-45deg, #110303f0, #dd6d04, #011c1afc, #7a6868);
 }
 
-.home-container a {
+.home-main-wrap {
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem 1.5rem;
+}
+
+/* Hero Section */
+.home-hero {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF7F2 100%);
+  border: 1px solid var(--border-subtle);
+  padding: 3.5rem 3rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2.5rem;
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 75, 49, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.home-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: #FFF4F0;
+  border: 1px solid rgba(200, 75, 49, 0.25);
+  border-radius: var(--radius-pill);
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.home-hero-title {
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.home-hero-desc {
+  max-width: 680px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.home-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Feature / Action Cards Grid */
+.home-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.burak-card {
+  position: relative;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
   text-decoration: none;
-  color: #000000;
+  overflow: hidden;
 }
 
-.home-container .nav-item a {
-  color: #e3c08d;
+.burak-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-primary), #E05338);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
-.home-container .nav-item a.disabled {
-  color: #898071;
+.burak-card:hover {
+  background: #FFFFFF;
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md), var(--shadow-warm);
 }
 
-.home-container .navigation-menu {
-  position: relative;
-  z-index: 10000;
-  color: #efefee;
-  font-size: 40px;
-  font-family: monospace;
+.burak-card:hover::after {
+  opacity: 1;
 }
 
-.home-container .animation-frame {
-  position: relative;
+.burak-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.burak-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: var(--accent-primary-light);
+  border: 1px solid rgba(200, 75, 49, 0.2);
+  color: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 55px;
+  font-size: 1.4rem;
+  transition: transform var(--transition-base);
 }
 
-.home-container .animation-wrapper {
-  position: relative;
-  width: 775px;
-  height: 775px;
+.burak-card:hover .burak-card-icon {
+  transform: scale(1.08) rotate(-5deg);
+  background: var(--accent-primary);
+  color: #FFFFFF;
+}
+
+.burak-card-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.burak-card-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: var(--text-primary);
+}
+
+.burak-card-desc {
+  font-size: 0.925rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.burak-card-link {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-primary);
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.4rem;
+  transition: gap var(--transition-fast);
 }
 
-.home-container .sphere-animation {
-  position: relative;
-  width: 580px;
-  height: 580px;
+.burak-card:hover .burak-card-link {
+  color: var(--accent-primary-hover);
+  gap: 0.75rem;
 }
 
-.home-container .sphere path {
-  fill: url(#sphereGradient);
-  stroke-width: 1px;
-  stroke: rgba(80, 80, 80, 0.35);
-  backface-visibility: hidden;
-}
 
-@media (min-width: 500px) {
-  .sphere path {
-    stroke-width: 0.4px;
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 2.5rem 1.5rem;
+  }
+  .home-hero-title {
+    font-size: 2rem;
+  }
+  .philosophy-banner {
+    padding: 1.75rem 1.5rem;
   }
 }

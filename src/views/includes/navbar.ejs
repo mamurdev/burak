@@ -1,0 +1,140 @@
+<nav class="burak-navbar">
+  <div class="burak-nav-inner">
+    <!-- Brand -->
+    <a href="/admin" class="burak-brand">
+      <div class="burak-brand-icon">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <div class="burak-brand-title">
+        <span class="main-title">BURAK</span>
+        <span class="sub-title">Cuisine &bull; Administration</span>
+      </div>
+    </a>
+
+    <!-- Center Navigation Links -->
+    <div class="burak-nav-menu">
+      <a class="burak-nav-link" href="/admin">
+        <i class="fa-solid fa-compass"></i>
+        <span>Home</span>
+      </a>
+      <% if (member) { %>
+      <a class="burak-nav-link" href="/admin/product/all">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Menu</span>
+      </a>
+      <a class="burak-nav-link" href="/admin/user/all">
+        <i class="fa-solid fa-users"></i>
+        <span>Users</span>
+      </a>
+      <% } %>
+    </div>
+
+    <!-- Right User / Auth Status -->
+    <div class="burak-nav-auth" style="position: relative;">
+      <% if (member) { %>
+      <!-- Clickable Admin Profile Section Trigger -->
+      <button
+        type="button"
+        class="burak-user-pill"
+        id="admin-profile-trigger"
+        aria-haspopup="true"
+        aria-expanded="false"
+        title="Click to view Administrator Profile Details"
+      >
+        <% if (member.memberImage) { %>
+          <img
+            src="/<%= member.memberImage %>"
+            alt="<%= member.memberNick %>"
+            class="burak-user-avatar"
+            style="width: 34px; height: 34px; min-width: 34px; min-height: 34px; max-width: 34px; max-height: 34px; border-radius: 50%; object-fit: cover; display: block;"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="burak-user-initials" style="display: none; width: 34px; height: 34px; border-radius: 50%;">
+            <%= member.memberNick.substring(0, 2).toUpperCase() %>
+          </div>
+        <% } else { %>
+          <div class="burak-user-initials" style="width: 34px; height: 34px; border-radius: 50%;">
+            <%= member.memberNick.substring(0, 2).toUpperCase() %>
+          </div>
+        <% } %>
+        <span class="burak-user-name"><%= member.memberNick %></span>
+        <i class="fa-solid fa-chevron-down admin-chevron"></i>
+      </button>
+
+      <!-- Direct Functional Logout Button -->
+      <a
+        href="/admin/logout"
+        class="burak-logout-btn"
+        id="navbar-logout-btn"
+        onclick="return handleLogout(event)"
+        title="End current session and sign out"
+      >
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+
+      <!-- Admin Profile Details Popover -->
+      <div class="admin-profile-popover" id="admin-profile-popover">
+        <div class="admin-popover-header">
+          <% if (member.memberImage) { %>
+            <img
+              src="/<%= member.memberImage %>"
+              alt="<%= member.memberNick %>"
+              class="admin-popover-avatar"
+              style="width: 54px; height: 54px; min-width: 54px; min-height: 54px; max-width: 54px; max-height: 54px; border-radius: 50%; object-fit: cover; display: block;"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div class="admin-popover-initials" style="display: none; width: 54px; height: 54px; border-radius: 50%;">
+              <%= member.memberNick.substring(0, 2).toUpperCase() %>
+            </div>
+          <% } else { %>
+            <div class="admin-popover-initials" style="width: 54px; height: 54px; border-radius: 50%;">
+              <%= member.memberNick.substring(0, 2).toUpperCase() %>
+            </div>
+          <% } %>
+          <div class="admin-popover-meta">
+            <span class="admin-popover-name"><%= member.memberNick %></span>
+            <span class="admin-popover-role">
+              <i class="fa-solid fa-shield-halved fa-xs mr-1"></i>
+              <%= member.memberType || 'RESTAURANT ADMIN' %>
+            </span>
+            <span class="admin-popover-status">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Status: <%= member.memberStatus || 'ACTIVE' %></span>
+            </span>
+          </div>
+        </div>
+
+        <div class="admin-popover-body">
+          <div class="admin-info-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Telephone</span>
+              <span class="info-val"><%= member.memberPhone || '+82 10-0000-0000' %></span>
+            </div>
+          </div>
+
+          <% if (member.memberDesc) { %>
+          <div class="admin-info-item" style="align-items: flex-start;">
+            <i class="fa-solid fa-quote-left mt-1"></i>
+            <div>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Atelier Notes</span>
+              <span class="info-val" style="font-size: 0.825rem; font-weight: normal; color: var(--text-secondary);"><%= member.memberDesc %></span>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% } else { %>
+      <a href="/admin/login" class="btn-ghost" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <span>Login</span>
+      </a>
+      <a href="/admin/signup" class="btn-accent" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+      </a>
+      <% } %>
+    </div>
+  </div>
+</nav>

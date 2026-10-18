@@ -1,45 +1,102 @@
 <%- include('includes/header') %>
-
 <link rel="stylesheet" type="text/css" href="/css/login.css" />
 
 <body>
-  <form class="login-container" action="/admin/login" METHOD="POST">
-    <div class="login-frame">
-      <div class="login-top">
-        <span>Enter</span>
-        <div>Go back <a href="/admin" style="color: #6440fb">Home</a></div>
-        <p>
-          Not registered yet?
-          <a href="/admin/signup" style="color: #6440fb">Signup</a>
-        </p>
-      </div>
-      <div class="login-input-frame">
-        <div class="login-input-container">
-          <label>Restaurant *</label>
-          <input
-            type="text"
-            name="memberNick"
-            class="member-nick"
-            placeholder="Username"
-            value=""
-            required
-          />
+  <div class="auth-page-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-brand-emblem">
+          <i class="fa-solid fa-utensils"></i>
         </div>
-        <div class="login-input-container">
-          <label>Password *</label>
-          <input
-            type="password"
-            name="memberPassword"
-            class="member-password"
-            placeholder="Password"
-            value=""
-            required
-          />
-        </div>
+        <h1 class="auth-title">Burak Atelier</h1>
+        <p class="auth-subtitle">Sign in to your administrative restaurant console</p>
       </div>
-      <button class="login-btn btn" name="login" type="submit">Login</button>
+
+      <form action="/admin/login" method="POST" id="login-form">
+        <!-- Restaurant Nickname / Username -->
+        <div class="burak-form-group">
+          <label class="burak-label">
+            <span>Restaurant / Username</span>
+            <span class="required">*</span>
+          </label>
+          <div class="auth-input-wrapper">
+            <input
+              type="text"
+              name="memberNick"
+              class="burak-input member-nick"
+              placeholder="e.g. burak_dubai"
+              required
+              autofocus
+            />
+            <i class="fa-solid fa-user input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="burak-form-group">
+          <label class="burak-label">
+            <span>Master Password</span>
+            <span class="required">*</span>
+          </label>
+          <div class="auth-input-wrapper">
+            <input
+              type="password"
+              name="memberPassword"
+              id="login-password"
+              class="burak-input member-password"
+              placeholder="••••••••••••"
+              required
+            />
+            <i class="fa-solid fa-lock input-icon"></i>
+            <button
+              type="button"
+              class="pwd-toggle-btn"
+              onclick="togglePasswordVisibility('login-password', this)"
+              title="Toggle password view"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-accent auth-submit-btn">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Enter Console</span>
+        </button>
+
+        <!-- Footer Links -->
+        <div class="auth-footer-links">
+          <div>
+            Need a new restaurant account?
+            <a href="/admin/signup">Register here</a>
+          </div>
+          <div>
+            <a href="/admin">
+              <i class="fa-solid fa-arrow-left fa-xs mr-1"></i>
+              Return to Public Portal
+            </a>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
+
+  <script>
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  </script>
 </body>
 
 <%- include('includes/footer') %>

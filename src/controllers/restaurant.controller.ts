@@ -123,7 +123,17 @@ restaurantController.getUsers = async (req: Request, res: Response) => {
   try {
     console.log("getUsers");
     const result = await memberService.getUsers();
-    res.render("users", { users: result });
+
+    // Support JSON response if requested via format=json or Accept: application/json
+    if (req.query.format === "json" || req.headers.accept?.includes("application/json")) {
+      return res.status(HttpCode.OK).json({ data: result });
+    }
+
+    const activeStatus = ((req.query.status as string) || "ALL").toUpperCase();
+    res.render("users", { 
+      users: result,
+      activeStatus: activeStatus 
+    });
   } catch (err) {
     res.redirect("/admin/login");
     console.log("Error, getUsers:", err);

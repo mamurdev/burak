@@ -1,91 +1,249 @@
 <%- include('includes/header') %>
-
 <link rel="stylesheet" type="text/css" href="/css/users.css" />
 
 <body>
-  <div class="users-container">
-    <% if(!member) { %>
-    <div class="navigation-menu">
-      <ul class="nav justify-content-center">
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link active" href="/admin/">Home</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/signup">SignUp</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/login">Login</a>
-        </li>
-      </ul>
-    </div>
+  <div class="users-container" data-initial-status="<%= typeof activeStatus !== 'undefined' ? activeStatus : 'ALL' %>">
+    <%- include('includes/navbar') %>
 
-    <div class="users-frame" style="color: #dddddd">
-      <div class="board" style="font-size: 40px">Please login first!</div>
-    </div>
+    <main class="users-main-wrap">
+      <% if (!member) { %>
+        <!-- Unauthorized Guest View -->
+        <div class="auth-required-card">
+          <div class="auth-required-icon">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h2 style="font-family: var(--font-display); font-size: 1.75rem; margin-bottom: 0.75rem;">
+            Restricted Patron Directory
+          </h2>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            Please sign in with authorized restaurant manager credentials to inspect customer profiles and membership standings.
+          </p>
+          <a href="/admin/login" class="btn-accent">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Proceed to Login</span>
+          </a>
+        </div>
+      <% } else { %>
+        <!-- Header Bar -->
+        <div class="users-header-bar">
+          <div class="users-header-left">
+            <h1 class="users-page-title">
+              <span>Patrons &amp; Members Directory</span>
+              <span class="users-count-badge" id="header-total-badge"><%= users.length %> Total</span>
+            </h1>
+            <p class="users-page-subtitle">
+              Audit customer account standings, contact records, active privileges, and dining permissions.
+            </p>
+          </div>
+        </div>
 
-    <% } else { %>
-    <div class="navigation-menu">
-      <ul class="nav justify-content-center">
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link active" href="/admin/">Home</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/product/all">Menu</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/user/all">Users</a>
-        </li>
-        <li
-          class="nav-item"
-          style="cursor: pointer"
-          onclick="return confirm('Do you really want to logout?')"
-        >
-          <a class="nav-link" href="/admin/logout">Logout</a>
-        </li>
-      </ul>
-    </div>
+        <!-- 4-Card Interactive Metrics Strip -->
+        <% 
+          const totalUsers = users.length;
+          const activeUsers = users.filter(u => u.memberStatus === 'ACTIVE').length;
+          const blockedUsers = users.filter(u => u.memberStatus === 'BLOCK').length;
+          const deletedUsers = users.filter(u => u.memberStatus === 'DELETE').length;
+        %>
+        <div class="users-stats-strip">
+          <!-- Total -->
+          <div class="user-stat-card card-selected" data-filter="ALL" title="Click to view all members">
+            <div class="stat-icon-box stat-icon-all">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Total Patrons</span>
+              <span class="stat-value" id="stat-count-total"><%= totalUsers %></span>
+            </div>
+          </div>
 
-    <div class="users-frame">
-      <div class="board">
-        <div class="user-table">
-          <span class="header-name" style="margin-bottom: 30px"
-            >All Users List</span
-          >
-          <table class="table table-hover table-sm">
-            <thead class="thead-light">
-              <tr class="thead-light">
-                <th scope="col">No</th>
-                <th scope="col">Name</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Status</th>
+          <!-- Active -->
+          <div class="user-stat-card" data-filter="ACTIVE" title="Click to filter Active members">
+            <div class="stat-icon-box stat-icon-emerald">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Active Diners</span>
+              <span class="stat-value" id="stat-count-active"><%= activeUsers %></span>
+            </div>
+          </div>
+
+          <!-- Blocked -->
+          <div class="user-stat-card" data-filter="BLOCK" title="Click to filter Blocked accounts">
+            <div class="stat-icon-box stat-icon-amber">
+              <i class="fa-solid fa-ban"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Blocked Accounts</span>
+              <span class="stat-value" id="stat-count-block"><%= blockedUsers %></span>
+            </div>
+          </div>
+
+          <!-- Deleted -->
+          <div class="user-stat-card" data-filter="DELETE" title="Click to filter Deleted accounts">
+            <div class="stat-icon-box stat-icon-rose">
+              <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-label">Deleted Accounts</span>
+              <span class="stat-value" id="stat-count-delete"><%= deletedUsers %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Segmented Status Filter Bar & Search Integration -->
+        <div class="filter-controls-wrapper">
+          <!-- Segmented Tab Bar -->
+          <div class="user-status-segmented-bar">
+            <!-- All Members -->
+            <button type="button" class="segmented-tab active" data-status="ALL">
+              <i class="fa-solid fa-border-all"></i>
+              <span>All Members</span>
+              <span class="tab-count-pill" id="badge-count-all"><%= totalUsers %></span>
+            </button>
+
+            <!-- Active -->
+            <button type="button" class="segmented-tab" data-status="ACTIVE">
+              <i class="fa-solid fa-circle-check" style="color: #15803D;"></i>
+              <span>Active</span>
+              <span class="tab-count-pill" id="badge-count-active"><%= activeUsers %></span>
+            </button>
+
+            <!-- Blocked -->
+            <button type="button" class="segmented-tab" data-status="BLOCK">
+              <i class="fa-solid fa-ban" style="color: #B45309;"></i>
+              <span>Blocked</span>
+              <span class="tab-count-pill" id="badge-count-block"><%= blockedUsers %></span>
+            </button>
+
+            <!-- Deleted -->
+            <button type="button" class="segmented-tab" data-status="DELETE">
+              <i class="fa-solid fa-trash-can" style="color: #BE123C;"></i>
+              <span>Deleted</span>
+              <span class="tab-count-pill" id="badge-count-delete"><%= deletedUsers %></span>
+            </button>
+          </div>
+
+          <!-- Integrated Search Box -->
+          <div class="user-search-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              id="user-search"
+              class="user-search-input"
+              placeholder="Filter by name or phone..."
+              autocomplete="off"
+            />
+            <button type="button" class="clear-search-btn" id="clear-search-btn" title="Clear search">
+              &times;
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Filter Feedback Summary -->
+        <div class="filter-summary-row">
+          <span class="filter-summary-text">
+            Showing <b id="visible-users-count"><%= totalUsers %></b> of <b><%= totalUsers %></b> patrons
+          </span>
+          <span class="filter-reset-link" id="filter-reset-link">
+            <i class="fa-solid fa-rotate-left mr-1"></i>
+            Reset to All Members
+          </span>
+        </div>
+
+        <!-- Patrons Table -->
+        <div class="burak-table-container">
+          <table class="burak-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Patron / Member Profile</th>
+                <th>Contact Telephone</th>
+                <th style="width: 170px;">Account Status</th>
               </tr>
             </thead>
-            <!--  LOOP ALL USERS: START  -->
-            <% users.map(function(value, key) { %>
-            <tbody style="background: white">
-              <tr>
-                <td><%= key + 1 %></td>
-                <td><%= value.memberNick %></td>
-                <td><%= value.memberPhone %></td>
-                <td style="width: 13%">
-                  <select class="spec-select member-status" id="<%= value._id %>">
-                    <option value="ACTIVE" <%= value.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
-                    <option value="BLOCK" <%= value.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
-                    <option value="DELETE" <%= value.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
-                  </select>
+            <tbody id="users-table-body">
+              <% if (users && users.length > 0) { %>
+                <% users.forEach(function(value, index) { %>
+                  <tr
+                    class="user-table-row"
+                    data-status="<%= value.memberStatus %>"
+                    data-nick="<%= value.memberNick %>"
+                    data-phone="<%= value.memberPhone %>"
+                  >
+                    <td style="color: var(--text-faint); font-weight: 700;"><%= index + 1 %></td>
+                    <td>
+                      <div class="user-avatar-cell">
+                        <% if (value.memberImage) { %>
+                          <img
+                            src="/<%= value.memberImage %>"
+                            alt="<%= value.memberNick %>"
+                            class="user-avatar-img"
+                            style="width: 44px; height: 44px; min-width: 44px; min-height: 44px; max-width: 44px; max-height: 44px; border-radius: 50%; object-fit: cover; display: block;"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                          />
+                          <div class="user-avatar-initials" style="display: none;">
+                            <%= (value.memberNick || 'U').substring(0, 2).toUpperCase() %>
+                          </div>
+                        <% } else { %>
+                          <div class="user-avatar-initials">
+                            <%= (value.memberNick || 'U').substring(0, 2).toUpperCase() %>
+                          </div>
+                        <% } %>
+                        <div class="user-info">
+                          <span class="user-nick"><%= value.memberNick %></span>
+                          <span class="user-role-tag">Customer Patron</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        class="phone-copy-btn"
+                        data-phone="<%= value.memberPhone %>"
+                        title="Click to copy telephone"
+                      >
+                        <i class="fa-solid fa-phone"></i>
+                        <span><%= value.memberPhone %></span>
+                        <i class="fa-regular fa-copy text-muted ml-1" style="font-size: 0.75rem;"></i>
+                      </button>
+                    </td>
+                    <td>
+                      <select
+                        class="status-pill-select member-status status-<%= value.memberStatus %>"
+                        id="<%= value._id %>"
+                        data-id="<%= value._id %>"
+                        data-prev-status="<%= value.memberStatus %>"
+                      >
+                        <option value="ACTIVE" <%= value.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
+                        <option value="BLOCK" <%= value.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
+                        <option value="DELETE" <%= value.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                      </select>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+
+              <!-- Empty Filter Match -->
+              <tr id="users-empty-row" style="<%= users && users.length > 0 ? 'display: none;' : '' %>">
+                <td colspan="4">
+                  <div class="table-empty-state">
+                    <div class="table-empty-icon">
+                      <i class="fa-solid fa-user-slash"></i>
+                    </div>
+                    <div style="font-weight: 700; font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+                      No Patrons in This Category
+                    </div>
+                    <div>Try selecting another status tab or clear your search input.</div>
+                  </div>
                 </td>
               </tr>
             </tbody>
-            <% }) %>
-            <!--  LOOP ALL USERS: END  -->
           </table>
         </div>
-      </div>
-    </div>
-    <% } %>
+      <% } %>
+    </main>
   </div>
 
   <script type="text/javascript" src="/js/users.js"></script>
-</body>
 
 <%- include('includes/footer') %>

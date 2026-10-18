@@ -1,230 +1,429 @@
 <%- include('includes/header') %>
-
 <link rel="stylesheet" type="text/css" href="/css/products.css" />
 
 <body>
   <div class="products-container">
-    <div class="navigation-menu">
-      <ul class="nav justify-content-center">
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link active" href="/admin/">Home</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/product/all">Menu</a>
-        </li>
-        <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/user/all">Users</a>
-        </li>
-        <li
-          class="nav-item"
-          style="cursor: pointer"
-          onclick="return confirm('Do you want to logout?')"
-        >
-          <a class="nav-link" href="/admin/logout">Logout</a>
-        </li>
-      </ul>
-    </div>
+    <%- include('includes/navbar') %>
 
-    <div class="restaurant-menu-frame">
-      <div class="board">
-        <div class="dishes-table">
-          <span class="new-dish-txt" style="margin-bottom: 30px">
-            RESTAURANT MENU
-          </span>
-          <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-              <tr class="thead-light">
-                <th scope="col">T/r</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Product Type</th>
-                <th scope="col">Product Volume</th>
-                <th scope="col">Product Price</th>
-                <th scope="col">Product Left Count</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
-            <!--  LOOP PRODUCTS: START  -->
-            <% products.map(function(value, key) { %>
-            <tbody style="background: white">
-              <tr>
-                <td><%= key + 1 %></td>
-                <td><%= value.productName %></td>
-                <td><%= value.productCollection %></td>
-                <td>
-                  <%= value.productCollection === 'DRINK' ? value.productVolume : value.productSize %>
-                </td>
-                <td><%= value.productPrice %></td>
-                <td><%= value.productLeftCount %></td>
-                <td>
-                  <select class="spec-select new-product-status" id="<%= value._id %>">
-                    <option value="PAUSE" <%= value.productStatus === 'PAUSE' ? 'selected' : '' %>>PAUSE</option>
-                    <option value="PROCESS" <%= value.productStatus === 'PROCESS' ? 'selected' : '' %>>PROCESS</option>
-                    <option value="DELETE" <%= value.productStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
-                  </select>
-                </td>
-              </tr>
-            </tbody>
-            <% }) %>
-            <!--  LOOP PRODUCTS: END  -->
-          </table>
-          <div
-            class="long-input"
-            style="align-items: flex-end; margin-bottom: 25px"
-          >
-            <button class="btn btn-primary" id="process-btn">
-              New Product
-            </button>
-          </div>
+    <main class="products-main-wrap">
+      <!-- Header Controls Bar -->
+      <div class="menu-header-bar">
+        <div class="menu-header-left">
+          <h1 class="menu-page-title">
+            <span>Menu &amp; Culinary Catalog</span>
+            <span class="menu-count-badge" id="menu-total-badge"><%= products.length %> Items</span>
+          </h1>
+          <p class="menu-page-subtitle">
+            Manage seasonal dishes, fresh salads, traditional desserts, portion sizes, and live menu availability.
+          </p>
         </div>
+
+        <div class="menu-controls">
+          <!-- Live Search Box -->
+          <div class="menu-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              id="menu-search"
+              class="menu-search-input"
+              placeholder="Search recipes, salads, drinks..."
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- New Dish Trigger Button -->
+          <button class="btn-accent" id="process-btn">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add New Product</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- New Dish Creation Panel / Drawer -->
+      <section class="dish-create-card" id="dish-create-card">
+        <div class="dish-create-header">
+          <div class="dish-create-title">
+            <i class="fa-solid fa-bowl-food" style="color: var(--accent-primary);"></i>
+            <span>Add New Culinary Item</span>
+          </div>
+          <button type="button" class="btn-ghost" id="cancel-btn" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;">
+            <i class="fa-solid fa-xmark"></i>
+            <span>Close</span>
+          </button>
+        </div>
+
         <form
           action="/admin/product/create"
           method="POST"
-          class="dish-container"
           enctype="multipart/form-data"
+          id="create-product-form"
+          novalidate
         >
-          <div class="long-input" style="display: flex; align-items: center">
-            <span class="new-dish-txt">NEW PRODUCT DETAIL</span>
-          </div>
-          <div class="login-input-frame">
-            <div class="long-input">
-              <label>Product Name</label>
+          <input type="hidden" name="productStatus" value="PAUSE" />
+          
+          <div class="dish-create-grid">
+            <!-- Product Name -->
+            <div class="burak-form-group">
+              <label class="burak-label" for="form-product-name">
+                <span>Product Name</span>
+                <span class="required">*</span>
+              </label>
               <input
                 type="text"
-                placeholder="Name"
+                id="form-product-name"
                 name="productName"
-                class="product-name"
+                class="burak-input"
+                placeholder="e.g. Traditional Gavurdagi Salad"
+                required
               />
             </div>
-            <input
-              name="productStatus"
-              value="PAUSE"
-              class="product-status"
-              hidden
-            />
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Price</label>
+
+            <!-- Product Category -->
+            <div class="burak-form-group">
+              <label class="burak-label" for="form-product-collection">
+                <span>Culinary Category</span>
+                <span class="required">*</span>
+              </label>
+              <select id="form-product-collection" name="productCollection" class="burak-select product-collection">
+                <option value="DISH" selected>Dishes &amp; Mains</option>
+                <option value="SALAD">Fresh Salads</option>
+                <option value="DESERT">Traditional Desserts</option>
+                <option value="DRINK">Artisanal Drinks</option>
+                <option value="OTHER">Specials &amp; Other</option>
+              </select>
+            </div>
+
+            <!-- Product Price -->
+            <div class="burak-form-group">
+              <label class="burak-label" for="form-product-price">
+                <span>Price ($ / ₺)</span>
+                <span class="required">*</span>
+              </label>
               <input
                 type="number"
-                placeholder="Price"
+                id="form-product-price"
                 name="productPrice"
-                class="product-price"
+                class="burak-input"
+                placeholder="e.g. 14.50"
+                step="0.01"
+                min="0"
+                required
               />
             </div>
-            <div class="half-input">
-              <label>Product Left Counts</label>
+
+            <!-- Product Left Count -->
+            <div class="burak-form-group">
+              <label class="burak-label" for="form-product-count">
+                <span>Daily Inventory Stock</span>
+                <span class="required">*</span>
+              </label>
               <input
                 type="number"
-                placeholder="Counts"
+                id="form-product-count"
                 name="productLeftCount"
-                class="product-left-count"
+                class="burak-input"
+                placeholder="e.g. 25"
+                min="0"
+                required
               />
             </div>
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Type</label>
-              <select class="product-collection" name="productCollection">
-                <option value="DISH" selected>Dish</option>
-                <option value="SALAD">Salad</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="DRINK">Drink</option>
-                <option value="OTHER">Other</option>
+
+            <!-- Dish Size (Shown for non-drink) -->
+            <div class="burak-form-group" id="product-size-group">
+              <label class="burak-label" for="form-product-size">
+                <span>Portion Size</span>
+              </label>
+              <select id="form-product-size" name="productSize" class="burak-select">
+                <option value="SMALL">Small Portion</option>
+                <option value="NORMAL" selected>Standard Serving</option>
+                <option value="LARGE">Large Feast</option>
+                <option value="SET">Platter Set</option>
               </select>
             </div>
 
-            <div class="half-input" id="product-collection">
-              <label>Dish Volume</label>
-              <select class="product-size" name="productSize">
-                <option value="SMALL">Small</option>
-                <option value="NORMAL" selected>Normal</option>
-                <option value="LARGE">Large</option>
-                <option value="SET">Set</option>
-              </select>
-            </div>
-
-            <div class="half-input" id="product-volume" style="display: none">
-              <label>Drink Volume</label>
-              <select class="product-volume" name="productVolume">
-                <option value="0.5">0,5 liters</option>
-                <option value="1" selected>1 liters</option>
-                <option value="1.2">1,2 liters</option>
-                <option value="1.5">1,5 liters</option>
-                <option value="2">2 liters</option>
+            <!-- Drink Volume (Shown only for DRINK) -->
+            <div class="burak-form-group" id="product-volume-group" style="display: none;">
+              <label class="burak-label" for="form-product-volume">
+                <span>Beverage Volume</span>
+              </label>
+              <select id="form-product-volume" name="productVolume" class="burak-select" disabled>
+                <option value="0.5">0.5 Liters</option>
+                <option value="1" selected>1.0 Liters</option>
+                <option value="1.2">1.2 Liters</option>
+                <option value="1.5">1.5 Liters</option>
+                <option value="2">2.0 Liters</option>
               </select>
             </div>
           </div>
-          <div class="long-input">
-            <label>Product Description</label>
-            <textarea name="productDesc" class="product-desc"></textarea>
+
+          <!-- Description (REQUIRED in Mongoose Schema) -->
+          <div class="burak-form-group">
+            <label class="burak-label" for="form-product-desc">
+              <span>Recipe Description &amp; Ingredients</span>
+              <span class="required">*</span>
+            </label>
+            <textarea
+              id="form-product-desc"
+              name="productDesc"
+              class="burak-textarea"
+              rows="3"
+              placeholder="e.g. Crisp cucumbers, tomatoes, walnuts, pomegranate molasses, fresh herbs, and extra virgin olive oil."
+              required
+            ></textarea>
           </div>
 
-          <div class="img-frame">
-            <label>Product Images</label>
-            <div class="media-frame">
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="1" id="image-section-1" />
+          <!-- Image Upload Slots -->
+          <div class="image-upload-section">
+            <label class="burak-label">
+              <span>Culinary Photography (Slot 1 Required)</span>
+              <span class="required">*</span>
+            </label>
+            
+            <div class="image-upload-grid">
+              <!-- Slot 1 (Primary / Required) -->
+              <div class="image-slot" id="slot-1">
+                <span class="image-slot-badge primary">Cover *</span>
+                <img src="" id="preview-1" class="image-slot-preview" alt="Slot 1 Preview" />
+                <div class="image-slot-overlay">
+                  <i class="fa-solid fa-cloud-arrow-up fa-lg"></i>
+                  <span class="overlay-text">Upload Cover</span>
+                </div>
                 <input
                   type="file"
-                  id="file"
+                  id="file-input-1"
                   name="productImages"
-                  class="image-one"
-                  required
+                  class="image-slot-input"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                 />
               </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="2" id="image-section-2" />
+
+              <!-- Slot 2 -->
+              <div class="image-slot" id="slot-2">
+                <span class="image-slot-badge">Gallery 2</span>
+                <img src="" id="preview-2" class="image-slot-preview" alt="Slot 2 Preview" />
+                <div class="image-slot-overlay">
+                  <i class="fa-solid fa-camera fa-lg"></i>
+                  <span class="overlay-text">Add Photo</span>
+                </div>
                 <input
                   type="file"
-                  id="file"
+                  id="file-input-2"
                   name="productImages"
-                  class="image-two"
+                  class="image-slot-input"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                 />
               </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="3" id="image-section-3" />
+
+              <!-- Slot 3 -->
+              <div class="image-slot" id="slot-3">
+                <span class="image-slot-badge">Gallery 3</span>
+                <img src="" id="preview-3" class="image-slot-preview" alt="Slot 3 Preview" />
+                <div class="image-slot-overlay">
+                  <i class="fa-solid fa-camera fa-lg"></i>
+                  <span class="overlay-text">Add Photo</span>
+                </div>
                 <input
                   type="file"
-                  id="file"
+                  id="file-input-3"
                   name="productImages"
-                  class="image-three"
+                  class="image-slot-input"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                 />
               </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="4" id="image-section-4" />
+
+              <!-- Slot 4 -->
+              <div class="image-slot" id="slot-4">
+                <span class="image-slot-badge">Gallery 4</span>
+                <img src="" id="preview-4" class="image-slot-preview" alt="Slot 4 Preview" />
+                <div class="image-slot-overlay">
+                  <i class="fa-solid fa-camera fa-lg"></i>
+                  <span class="overlay-text">Add Photo</span>
+                </div>
                 <input
                   type="file"
-                  id="file"
+                  id="file-input-4"
                   name="productImages"
-                  class="image-four"
+                  class="image-slot-input"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                 />
               </div>
-              <div class="upload-img-box">
-                <img src="/img/upload.svg" class="5" id="image-section-5" />
+
+              <!-- Slot 5 -->
+              <div class="image-slot" id="slot-5">
+                <span class="image-slot-badge">Gallery 5</span>
+                <img src="" id="preview-5" class="image-slot-preview" alt="Slot 5 Preview" />
+                <div class="image-slot-overlay">
+                  <i class="fa-solid fa-camera fa-lg"></i>
+                  <span class="overlay-text">Add Photo</span>
+                </div>
                 <input
                   type="file"
-                  id="file"
+                  id="file-input-5"
                   name="productImages"
-                  class="image-five"
+                  class="image-slot-input"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
                 />
               </div>
-              <input name="restaurantIid" class="restaurant-id" hidden />
             </div>
           </div>
 
-          <div class="operation-buttons">
-            <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="create-btn">
-              Create
+          <!-- Action Buttons -->
+          <div class="dish-create-actions">
+            <button type="button" class="btn-ghost" id="cancel-btn-bottom">Cancel</button>
+            <button type="submit" class="btn-accent" id="create-submit-btn">
+              <i class="fa-solid fa-check"></i>
+              <span>Publish to Menu</span>
             </button>
           </div>
         </form>
+      </section>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-filter-bar">
+        <button type="button" class="filter-tab active" data-category="ALL">
+          <i class="fa-solid fa-border-all"></i>
+          <span>All Items</span>
+        </button>
+        <button type="button" class="filter-tab" data-category="DISH">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Dishes</span>
+        </button>
+        <button type="button" class="filter-tab" data-category="SALAD">
+          <i class="fa-solid fa-leaf"></i>
+          <span>Salads</span>
+        </button>
+        <button type="button" class="filter-tab" data-category="DESERT">
+          <i class="fa-solid fa-cake-candles"></i>
+          <span>Desserts</span>
+        </button>
+        <button type="button" class="filter-tab" data-category="DRINK">
+          <i class="fa-solid fa-wine-glass"></i>
+          <span>Drinks</span>
+        </button>
+        <button type="button" class="filter-tab" data-category="OTHER">
+          <i class="fa-solid fa-ellipsis"></i>
+          <span>Other</span>
+        </button>
       </div>
-    </div>
+
+      <!-- Luxury Products Table -->
+      <div class="burak-table-container">
+        <table class="burak-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">#</th>
+              <th>Recipe &amp; Ingredients</th>
+              <th>Category</th>
+              <th>Portion / Vol</th>
+              <th>Price</th>
+              <th>Inventory</th>
+              <th style="width: 150px;">Availability</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <% if (products && products.length > 0) { %>
+              <% products.forEach(function(value, index) { %>
+                <tr
+                  class="product-table-row"
+                  data-category="<%= value.productCollection %>"
+                  data-name="<%= value.productName %>"
+                >
+                  <td style="color: var(--text-faint); font-weight: 700;"><%= index + 1 %></td>
+                  <td>
+                    <div class="dish-name-cell">
+                      <div class="dish-thumb-box">
+                        <% if (value.productImages && value.productImages.length > 0) { %>
+                          <img
+                            src="/<%= value.productImages[0] %>"
+                            alt="<%= value.productName %>"
+                            class="dish-thumb-img"
+                            style="width: 56px; height: 56px; min-width: 56px; min-height: 56px; max-width: 56px; max-height: 56px; object-fit: cover; display: block;"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                          />
+                          <i class="fa-solid fa-utensils dish-thumb-placeholder" style="display: none;"></i>
+                        <% } else { %>
+                          <i class="fa-solid fa-utensils dish-thumb-placeholder"></i>
+                        <% } %>
+                      </div>
+                      <div class="dish-info">
+                        <span class="dish-title"><%= value.productName %></span>
+                        <% if (value.productDesc) { %>
+                          <span class="dish-desc-snippet" title="<%= value.productDesc %>">
+                            <%= value.productDesc %>
+                          </span>
+                        <% } %>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="category-chip">
+                      <% if (value.productCollection === 'DISH') { %>
+                        <i class="fa-solid fa-utensils" style="color: #C84B31;"></i>
+                      <% } else if (value.productCollection === 'SALAD') { %>
+                        <i class="fa-solid fa-leaf" style="color: #15803D;"></i>
+                      <% } else if (value.productCollection === 'DESERT' || value.productCollection === 'DESSERT') { %>
+                        <i class="fa-solid fa-cake-candles" style="color: #D97706;"></i>
+                      <% } else if (value.productCollection === 'DRINK') { %>
+                        <i class="fa-solid fa-wine-glass" style="color: #0284C7;"></i>
+                      <% } else { %>
+                        <i class="fa-solid fa-tag"></i>
+                      <% } %>
+                      <span><%= value.productCollection %></span>
+                    </span>
+                  </td>
+                  <td>
+                    <span style="font-weight: 700; color: var(--text-secondary);">
+                      <%= value.productCollection === 'DRINK' ? (value.productVolume + ' L') : value.productSize %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="dish-price">$<%= Number(value.productPrice).toFixed(2) %></span>
+                  </td>
+                  <td>
+                    <% if (value.productLeftCount <= 0) { %>
+                      <span class="stock-tag stock-out">Out of Stock</span>
+                    <% } else if (value.productLeftCount <= 5) { %>
+                      <span class="stock-tag stock-low"><%= value.productLeftCount %> left</span>
+                    <% } else { %>
+                      <span class="stock-tag stock-in"><%= value.productLeftCount %> in stock</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <select
+                      class="status-pill-select new-product-status status-<%= value.productStatus %>"
+                      id="<%= value._id %>"
+                      data-id="<%= value._id %>"
+                      data-prev-status="<%= value.productStatus %>"
+                    >
+                      <option value="PROCESS" <%= value.productStatus === 'PROCESS' ? 'selected' : '' %>>PROCESS</option>
+                      <option value="PAUSE" <%= value.productStatus === 'PAUSE' ? 'selected' : '' %>>PAUSE</option>
+                      <option value="DELETE" <%= value.productStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
+                    </select>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } %>
+
+            <!-- Empty row when filter returns no matches -->
+            <tr id="products-empty-row" style="<%= products && products.length > 0 ? 'display: none;' : '' %>">
+              <td colspan="7">
+                <div class="table-empty-state">
+                  <div class="table-empty-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </div>
+                  <div style="font-weight: 700; font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    No Menu Items Found
+                  </div>
+                  <div>Select a different category tab or clear your search term.</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
   </div>
 
   <script type="text/javascript" src="/js/products.js"></script>
-</body>
 
 <%- include('includes/footer') %>
