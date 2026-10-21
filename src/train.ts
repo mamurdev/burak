@@ -1,8 +1,24 @@
+// MITASK-V
+// MITASK-V
+function countChars(str: string): { [key: string]: number } {
+  const counts: { [key: string]: number } = {};
+
+  for (let i = 0; i < str.length; i++) {
+    const char: string = str[i];
+    counts[char] = (counts[char] || 0) + 1;
+  }
+
+  return counts;
+}
+
+console.log(countChars("hello")); 
+
+
 // MITASK-T
 function mergeSortedArrays(a: number[], b: number[]): number[] {
   return [...a, ...b].sort((x, y) => x- y);
 }
-console.log(mergeSortedArrays([4, 2, 10], [9, 7, 5]));
+// console.log(mergeSortedArrays([4, 2, 10], [9, 7, 5]));
 
 // MITASK-S
 function missingNumber(arr: number[]): number {
