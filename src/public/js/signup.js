@@ -1,6 +1,33 @@
+console.log("Signup Initialized");
+
 /**
- * BURAK RESTAURANT SIGNUP INTERACTIVITY
- * Live image preview, password matching verification, file format checks
+ *
+
+$(function () {});
+
+function validateSignupForm() {
+  const memberNick = $(".member-nick").val();
+  const memberPhone = $(".member-phone").val();
+  const memberPassword = $(".member-password").val();
+  const confirmPassword = $(".confirm-password").val();
+
+  if (
+    memberNick === "" ||
+    memberPhone === "" ||
+    memberPassword === "" ||
+    confirmPassword === ""
+  ) {
+    alert("Please insert all required inputs!");
+    return false;
+  }
+
+  if (memberPassword !== confirmPassword) {
+    alert("Password differs, please check!");
+    return false;
+  }
+
+  return true; // missing in your screenshot
+}
  */
 
 $(function () {
@@ -20,7 +47,7 @@ $(function () {
       window.showToast(
         "Invalid Format",
         "Please select a JPG, PNG, or WEBP image file.",
-        "error"
+        "error",
       );
       this.value = "";
       return;
@@ -33,7 +60,11 @@ $(function () {
     const reader = new FileReader();
     reader.onload = function (e) {
       previewImg.attr("src", e.target.result);
-      window.showToast("Avatar Loaded", "Restaurant preview image updated.", "info");
+      window.showToast(
+        "Avatar Loaded",
+        "Restaurant preview image updated.",
+        "info",
+      );
     };
     reader.readAsDataURL(file);
   });
@@ -48,7 +79,7 @@ $(function () {
       window.showToast(
         "Password Mismatch",
         "The passwords entered do not match. Please re-check.",
-        "error"
+        "error",
       );
       $(".confirm-password").focus();
       return false;
@@ -59,7 +90,7 @@ $(function () {
       window.showToast(
         "Photo Required",
         "Please select a restaurant profile image before submitting.",
-        "warning"
+        "warning",
       );
       return false;
     }
