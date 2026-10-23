@@ -11,6 +11,8 @@
     "start:dev": "nodemon --exec ts-node src/server.ts",
     "train": "nodemon src/train.ts",
     "build": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
