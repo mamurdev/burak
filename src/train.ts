@@ -1,4 +1,15 @@
-// MITASK-V
+// MITASK-W
+function chunkArray(arr: number[], size: number): number[][] {
+  if(size <= 0) return [];
+  let result: number[][] = [];
+  for(let i = 0; i < arr.length; i += size) {
+    const slice = arr.slice(i, i + size);
+    result.push(slice);
+  }
+  return result;
+}
+console.log(chunkArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3));
+
 // MITASK-V
 function countChars(str: string): { [key: string]: number } {
   const counts: { [key: string]: number } = {};
@@ -11,7 +22,7 @@ function countChars(str: string): { [key: string]: number } {
   return counts;
 }
 
-console.log(countChars("hello")); 
+// console.log(countChars("hello")); 
 
 
 // MITASK-T
