@@ -3,6 +3,76 @@
  * Instant previews, dynamic portion switcher, robust form validation, async status updates
  */
 
+/** 
+
+$(function () {
+  $(".product-collection").on("change", () => {
+    const selectedValue = $(".product-collection").val();
+    if (selectedValue === "DRINK") {
+      $("#product-collection").hide();
+      $("#product-volume").show();
+    } else {
+      $("#product-volume").hide();
+      $("#product-collection").show();
+    }
+  });
+
+  $("#process-btn").on("click", () => {
+    $(".dish-container").slideToggle(500);
+    $("#process-btn").css("display", "none");
+  });
+
+  $("#cancel-btn").on("click", () => {
+    $(".dish-container").slideToggle(100);
+    $("#process-btn").css("display", "flex");
+  });
+});
+
+
+function validateForm() {
+  const productName = $(".product-name").val();
+  const productPrice = $(".product-price").val();
+  const productLeftCount = $(".product-left-count").val();
+  const productCollection = $(".product-collection").val();
+  const productDesc = $(".product-desc").val();
+  const productStatus = $(".product-status").val();
+
+  if (
+    productName === "" ||
+    productPrice === "" ||
+    productLeftCount === "" ||
+    productCollection === "" ||
+    productDesc === "" ||
+    productStatus === ""
+  ) {
+    alert("Please insert all details!");
+    return false;
+  } else return true;
+}
+
+  function previewFileHandler(input, order) {
+  const imgClassName = input.className;
+  console.log("input:", input);
+
+  const file = $(`.${imgClassName}`).get(0).files[0];
+  const fileType = file["type"];
+  const validImageType = ["image/jpg", "image/jpeg", "image/png"];
+
+  if (!validImageType.includes(fileType)) {
+    alert("Please insert only jpeg, jpg and png!");
+  } else {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        $(`#image-section-${order}`).attr("src", reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+}
+
+ */
+
 $(function () {
   console.log("Burak Products Controller Initialized");
 
@@ -37,7 +107,7 @@ $(function () {
     createDrawer.slideDown(350, function () {
       $("html, body").animate(
         { scrollTop: createDrawer.offset().top - 80 },
-        400
+        400,
       );
       $("#form-product-name").focus();
     });
@@ -80,7 +150,7 @@ $(function () {
         window.showToast(
           "Menu Status Updated",
           `Dish status is now ${newStatus}.`,
-          "success"
+          "success",
         );
       } else {
         throw new Error("Update response invalid");
@@ -93,7 +163,7 @@ $(function () {
       window.showToast(
         "Update Failed",
         "Could not update product status. Please try again.",
-        "error"
+        "error",
       );
     }
   });
@@ -108,17 +178,12 @@ $(function () {
       const file = this.files[0];
       if (!file) return;
 
-      const validTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/webp",
-      ];
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
       if (!validTypes.includes(file.type)) {
         window.showToast(
           "Invalid Format",
           "Please upload only JPG, PNG, or WEBP images.",
-          "error"
+          "error",
         );
         this.value = "";
         return;
@@ -148,35 +213,55 @@ $(function () {
 
     if (!name) {
       e.preventDefault();
-      window.showToast("Title Required", "Please provide a name for the dish or salad.", "error");
+      window.showToast(
+        "Title Required",
+        "Please provide a name for the dish or salad.",
+        "error",
+      );
       $("#form-product-name").focus();
       return false;
     }
 
     if (!price || isNaN(Number(price)) || Number(price) < 0) {
       e.preventDefault();
-      window.showToast("Price Required", "Please provide a valid price.", "error");
+      window.showToast(
+        "Price Required",
+        "Please provide a valid price.",
+        "error",
+      );
       $("#form-product-price").focus();
       return false;
     }
 
     if (!count || isNaN(Number(count)) || Number(count) < 0) {
       e.preventDefault();
-      window.showToast("Stock Required", "Please specify the available inventory count.", "error");
+      window.showToast(
+        "Stock Required",
+        "Please specify the available inventory count.",
+        "error",
+      );
       $("#form-product-count").focus();
       return false;
     }
 
     if (!desc) {
       e.preventDefault();
-      window.showToast("Description Required", "Please describe the ingredients or recipe preparation.", "warning");
+      window.showToast(
+        "Description Required",
+        "Please describe the ingredients or recipe preparation.",
+        "warning",
+      );
       $("#form-product-desc").focus();
       return false;
     }
 
     if (!coverFile) {
       e.preventDefault();
-      window.showToast("Photo Required", "Please upload at least one dish photo in Cover Slot 1.", "warning");
+      window.showToast(
+        "Photo Required",
+        "Please upload at least one dish photo in Cover Slot 1.",
+        "warning",
+      );
       $("#slot-1").addClass("pulse-error");
       setTimeout(() => $("#slot-1").removeClass("pulse-error"), 1500);
       return false;
