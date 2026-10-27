@@ -1,19 +1,28 @@
+// MITASK-Y
+function findIntersection(a: number[], b: number[]): number[] {
+  return a.filter((num) => b.includes(num));
+}
+
+console.log(findIntersection([1, 2, 3], [3, 2, 0]));
+
 // MITASK-X
-// countOccurrences({model: "A", s: {model: "B"}}, "model") return 2
 function countOccurrences(obj: { [key: string]: any }, name: string): number {
   let count = 0;
+  console.log("object keys", Object.keys(obj)); 
   for (const key of Object.keys(obj)) {
     if (key === name) {
       count += 1;
     }
     const value = obj[key];
+    console.log("value:", value);
+    console.log("key:", key);
     if (typeof value === "object" && value !== null) {
       count += countOccurrences(value, name);
     }
   }
   return count;
 }
-console.log(countOccurrences({ model: "A", s: { model: "B" } }, "model"));
+// console.log(countOccurrences({ model: "A", s: { model: "B" } }, "model"));
 
 // MITASK-W
 function chunkArray(arr: number[], size: number): number[][] {
