@@ -1,3 +1,16 @@
+// MITASK-Z
+function sumEvens(arr: number[]): number {
+  let sum: number = 0;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] % 2 === 0) {
+      sum += arr[i];
+    }
+  }
+  return sum;
+}
+
+console.log(sumEvens([1, 2, 3])); 
+
 // MITASK-Y
 function findIntersection(a: number[], b: number[]): number[] {
   return a.filter((num) => b.includes(num));
