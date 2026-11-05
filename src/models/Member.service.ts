@@ -31,7 +31,10 @@ class MemberService {
     // TODO: Consider member status
     const member = await this.memberModel
       .findOne(
-        { memberNick: input.memberNick, memberStatus: { $ne: MemberStatus.DELETE } },
+        {
+          memberNick: input.memberNick,
+          memberStatus: { $ne: MemberStatus.DELETE },
+        },
         {
           memberNick: 1,
           memberPassword: 1,
@@ -69,18 +72,31 @@ class MemberService {
   }
 
   public async updateMember(
-  member: Member,
-  input: MemberUpdateInput
-): Promise<Member> {
-  const memberId = shapeIntoMongooseObjectId(member._id);
-  const result = await this.memberModel
-    .findOneAndUpdate({ _id: memberId }, input, { new: true })
-    .exec();
-  if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    member: Member,
+    input: MemberUpdateInput,
+  ): Promise<Member> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const result = await this.memberModel
+      .findOneAndUpdate({ _id: memberId }, input, { new: true })
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
-  return result;
-}
+    return result;
+  }
 
+  public async getTopUsers(): Promise<Member[]> {
+    const result = await this.memberModel
+      .find({
+        memberStatus: MemberStatus.ACTIVE,
+        memberPoints: { $gte: 1 },
+      })
+      .sort({ memberPoints: -1 })
+      .limit(4)
+      .exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+    return result;
+  }
 
   /** SSR */
   public async processSignup(input: MemberInput): Promise<Member> {
