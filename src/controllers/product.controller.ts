@@ -35,14 +35,14 @@ productController.getProducts = async (req: Request, res: Response) => {
 };
 
 // SSR
-productController.getAllProduct = async (req: Request, res: Response) => {
+productController.getAllProducts = async (req: Request, res: Response) => {
   try {
-    console.log("getAllProduct");
+    console.log("getAllProducts");
     const data = await productService.getAllProducts();
 
     res.render("products", { products: data });
   } catch (err) {
-    console.log("Error, getAllProduct:", err);
+    console.log("Error, getAllProducts:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
